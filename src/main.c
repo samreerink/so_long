@@ -5,17 +5,16 @@
 /*                                                    +:+                     */
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
-/*   Created: 2024/04/20 14:02:20 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/04/20 22:14:52 by sreerink      ########   odam.nl         */
+/*   Created: 2024/04/21 20:39:35 by sreerink      #+#    #+#                 */
+/*   Updated: 2024/04/22 00:25:41 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
+#define WIDTH 1080
+#define HEIGTH 720
 
-#define WIDTH 640
-#define HEIGHT 360
-
-void	error_exit(t_game *so_long)
+void	error_exit(void)
 {
 	const char	*msg;
 
@@ -24,141 +23,98 @@ void	error_exit(t_game *so_long)
 		msg = mlx_strerror(mlx_errno);
 		write(STDERR_FILENO, msg, ft_strlen(msg));
 	}
-	if (so_long)
-	{
-		mlx_terminate(so_long->mlx);
-		free(so_long);
-	}
 	exit(EXIT_FAILURE);
 }
 
-t_game	*init_game(void)
+t_sprite_sheet	*load_sprite_sheet(const char *file_path, int slice_h, int slice_w)
 {
-	t_game		*so_long;
-	mlx_texture_t	*texture_bg;
+	t_sprite_sheet	*s;
 
-	so_long = ft_calloc(1, sizeof(t_game));
-	if (!so_long)
-		error_exit(NULL);
-	so_long->mlx = mlx_init(WIDTH, HEIGHT, "so_long", false);
-	if (!so_long->mlx)
-		error_exit(so_long);
-	texture_bg = mlx_load_png("./assets/color_bg.png");
-	if (!texture_bg)
-		error_exit(so_long);
-	//so_long->background = mlx_texture_to_image(so_long->mlx, texture_bg);
-	so_long->background = mlx_new_image(so_long->mlx, WIDTH, HEIGHT);
-	mlx_delete_texture(texture_bg);
-	if (!so_long->background)
-		error_exit(so_long);
-	if (mlx_image_to_window(so_long->mlx, so_long->background, 0, 0) < 0)
-		error_exit(so_long);
-	so_long->foreground = mlx_new_image(so_long->mlx, WIDTH, HEIGHT);
-	if (!so_long->foreground)
-		error_exit(so_long);
-	if (mlx_image_to_window(so_long->mlx, so_long->foreground, 0, 0) < 0)
-		error_exit(so_long);
-	return (so_long);
+	s = malloc(sizeof(t_sprite_sheet));
+	if (!s)
+		error_exit();
+	s->texture = mlx_load_png(file_path);
+	if (!s->texture)
+		error_exit();
+	s->texture_y = 0;
+	s->texture_x = 0;
+	s->slice_height = slice_h;
+	s->slice_width = slice_w;
+	return (s);
 }
 
-int	get_pixel_color(mlx_image_t *s, int x, int y)
+void	add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx)
 {
-	int		index;
-	unsigned char	r;
-	unsigned char	g;
-	unsigned char	b;
-	unsigned char	a;
+	uint32_t	index_src;
+	uint32_t	index_dst;
+	uint32_t	y;
+	uint32_t	x;
+	uint32_t	end_y;
+	uint32_t	end_x;
 
-	index = (x + y * s->width) * 4;
-	r = s->pixels[index];
-	g = s->pixels[index + 1];
-	b = s->pixels[index + 2];
-	a = s->pixels[index + 3];
-	return (r << 24 | g << 16 | b << 8 | a);
-}
-
-void	add_frame(t_game *so_long, t_animation *a, mlx_image_t *s)
-{
-	mlx_image_t	*frame;
-	int		x;
-	int		y;
-	int		w;
-	int		h;
-	int		i;
-	int		p_color;
-
-	i = 0;
-	x = 0;
+	a->frame = malloc(sizeof(t_frame));
+	// if (!a->frame)
+	a->frame->next = NULL;
+	a->frame->img = mlx_new_image(mlx, s->slice_width, s->slice_height);
+	// if (!img)
 	y = 0;
-	w = 32;
-	h = 32;
-	frame = mlx_new_image(so_long->mlx, w, h);
-	if (!frame)
-		error_exit(so_long);
-	while (y < h)
+	end_y = s->texture_y + s->slice_height;
+	end_x = s->texture_x + s->slice_width;
+	while (s->texture_y < end_y)
 	{
 		x = 0;
-		while (x < w)
+		s->texture_x = 0;
+		while (s->texture_x < end_x)
 		{
-			p_color = get_pixel_color(s, x, y);
-			so_long->foreground->pixels[i] = (unsigned char)0X00FFFFFF;
-			i++;
+			index_src = (s->texture_y * s->texture->width + s->texture_x) * 4;
+			index_dst = (y * s->slice_width + x) * 4;
+			a->frame->img->pixels[index_dst] = s->texture->pixels[index_src];
+			a->frame->img->pixels[index_dst + 1] = s->texture->pixels[index_src + 1];
+			a->frame->img->pixels[index_dst + 2] = s->texture->pixels[index_src + 2];
+			a->frame->img->pixels[index_dst + 3] = s->texture->pixels[index_src + 3];
+			s->texture_x++;
 			x++;
 		}
-		y++;
-	}
-	ft_lstadd_back(&a->frames, ft_lstnew(frame));
-}
-
-void	put_img_to_img(mlx_image_t *dst, mlx_image_t *src, uint32_t x, uint32_t y)
-{
-	int	i;
-	int	p_color;
-
-	while (y < src->height)
-	{
-		while (x < src->width)
-		{
-			i = (x + y * dst->width) * 4;
-			p_color = get_pixel_color(src, x, y);
-			dst->pixels[i] = p_color;
-			i++;
-			x++;
-		}
+		s->texture_y++;
 		y++;
 	}
 }
 
-t_animation	*animation_test(t_game **so_long)
+t_animation	*init_animation(t_sprite_sheet *s, int n_frames, mlx_t *mlx)
 {
 	t_animation	*a;
-	mlx_texture_t	*sprite_sheet;
-	mlx_image_t	*s;
 
-	a = ft_calloc(1, sizeof(t_animation));
+	a = malloc(sizeof(t_animation));
 	if (!a)
-		error_exit(*so_long);
-	sprite_sheet = mlx_load_png("./assets/fox.png");
-	if (!sprite_sheet)
-		error_exit(*so_long);
-	s = mlx_texture_to_image((*so_long)->mlx, sprite_sheet);
-	mlx_delete_texture(sprite_sheet);
-	if (!s)
-		error_exit(*so_long);
-	add_frame(*so_long, a, s);
+		error_exit();
+	a->current_frame = 0;
+	a->n_frames = n_frames;
+	add_frame(a, s, mlx);
 	return (a);
 }
 
 int	main(void)
 {
-	t_game		*so_long;
-	t_animation	*fox;
+	mlx_t		*mlx;
+//	mlx_image_t	*background;
+	mlx_image_t	*foreground;
+	t_animation	*fox_1;
+	t_sprite_sheet	*sprite_sheet;
 
-	so_long = init_game();
-	fox = animation_test(&so_long);
-	put_img_to_img(so_long->foreground, (mlx_image_t *)fox->frames, 0, 0);
-	mlx_loop(so_long->mlx);
-	mlx_terminate(so_long->mlx);
-	free(so_long);
+	mlx = mlx_init(WIDTH, HEIGTH, "so_long", false);
+	if (!mlx)
+		error_exit();
+	foreground = mlx_new_image(mlx, WIDTH, HEIGTH);
+	if (!foreground)
+		error_exit();
+/*	if (mlx_image_to_window(mlx, foreground, 0, 0) < 0)
+		error_exit(); */
+	sprite_sheet = load_sprite_sheet("./assets/fox.png", 32, 32);
+	fox_1 = init_animation(sprite_sheet, 5, mlx);
+	mlx_delete_texture(sprite_sheet->texture);
+	if (mlx_image_to_window(mlx, fox_1->frame->img, 0, 0) < 0)
+		error_exit();
+	mlx_loop(mlx);
+	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
 }
