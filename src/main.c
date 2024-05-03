@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:39:35 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/04/22 00:25:41 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/03 22:10:24 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,17 @@ t_sprite_sheet	*load_sprite_sheet(const char *file_path, int slice_h, int slice_
 	s = malloc(sizeof(t_sprite_sheet));
 	if (!s)
 		error_exit();
-	s->texture = mlx_load_png(file_path);
-	if (!s->texture)
+	s->t = mlx_load_png(file_path);
+	if (!s->t)
 		error_exit();
-	s->texture_y = 0;
-	s->texture_x = 0;
+	s->cur_y = 0;
+	s->cur_x = 0;
 	s->slice_height = slice_h;
 	s->slice_width = slice_w;
 	return (s);
 }
 
-void	add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx)
+void	sprite_to_frame(mlx_image_t *img, t_sprite_sheet *s)
 {
 	uint32_t	index_src;
 	uint32_t	index_dst;
@@ -52,31 +52,42 @@ void	add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx)
 	uint32_t	end_y;
 	uint32_t	end_x;
 
-	a->frame = malloc(sizeof(t_frame));
-	// if (!a->frame)
-	a->frame->next = NULL;
-	a->frame->img = mlx_new_image(mlx, s->slice_width, s->slice_height);
-	// if (!img)
 	y = 0;
-	end_y = s->texture_y + s->slice_height;
-	end_x = s->texture_x + s->slice_width;
-	while (s->texture_y < end_y)
+	end_y = s->cur_y + s->slice_height;
+	end_x = s->cur_x + s->slice_width;
+	while (s->cur_y < end_y)
 	{
 		x = 0;
-		s->texture_x = 0;
-		while (s->texture_x < end_x)
+		s->cur_x = 0;
+		while (s->cur_x < end_x)
 		{
-			index_src = (s->texture_y * s->texture->width + s->texture_x) * 4;
+			index_src = (s->cur_y * s->t->width + s->cur_x) * 4;
 			index_dst = (y * s->slice_width + x) * 4;
-			a->frame->img->pixels[index_dst] = s->texture->pixels[index_src];
-			a->frame->img->pixels[index_dst + 1] = s->texture->pixels[index_src + 1];
-			a->frame->img->pixels[index_dst + 2] = s->texture->pixels[index_src + 2];
-			a->frame->img->pixels[index_dst + 3] = s->texture->pixels[index_src + 3];
-			s->texture_x++;
+			img->pixels[index_dst] = s->t->pixels[index_src];
+			img->pixels[index_dst + 1] = s->t->pixels[index_src + 1];
+			img->pixels[index_dst + 2] = s->t->pixels[index_src + 2];
+			img->pixels[index_dst + 3] = s->t->pixels[index_src + 3];
+			s->cur_x++;
 			x++;
 		}
-		s->texture_y++;
+		s->cur_y++;
 		y++;
+	}
+}
+
+void	init_frames(t_animation *a, t_sprite_sheet *s, int n, mlx_t *mlx)
+{
+	t_frame	*new_frame;
+	t_frame	*temp;
+
+	a->frame = NULL;
+	while (n > 0)
+	{
+		new_frame = malloc(sizeof(t_frame));
+		// check
+		new_frame->img = mlx_new_image(mlx, s->slice_width, s->slice_height);
+		// check
+		sprite_to_frame(new_frame->img, s);
 	}
 }
 
@@ -89,7 +100,7 @@ t_animation	*init_animation(t_sprite_sheet *s, int n_frames, mlx_t *mlx)
 		error_exit();
 	a->current_frame = 0;
 	a->n_frames = n_frames;
-	add_frame(a, s, mlx);
+	init_frames(a, s, n_frames, mlx);
 	return (a);
 }
 
@@ -111,7 +122,7 @@ int	main(void)
 		error_exit(); */
 	sprite_sheet = load_sprite_sheet("./assets/fox.png", 32, 32);
 	fox_1 = init_animation(sprite_sheet, 5, mlx);
-	mlx_delete_texture(sprite_sheet->texture);
+	mlx_delete_texture(sprite_sheet->t);
 	if (mlx_image_to_window(mlx, fox_1->frame->img, 0, 0) < 0)
 		error_exit();
 	mlx_loop(mlx);

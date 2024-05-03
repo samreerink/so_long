@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:52:34 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/04/21 23:25:16 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/03 18:12:40 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,15 @@
 
 # include "../MLX42/include/MLX42/MLX42.h"
 # include "../Libft/libft.h"
+# include <stdio.h>
 # include <stdbool.h>
 
 typedef struct s_sprite_sheet {
-	mlx_texture_t	*texture;
+	mlx_texture_t	*t;
 	uint32_t	slice_height;
 	uint32_t	slice_width;
-	uint32_t	texture_y;
-	uint32_t	texture_x;
+	uint32_t	cur_y;
+	uint32_t	cur_x;
 } t_sprite_sheet;
 
 typedef struct s_frame {
