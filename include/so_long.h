@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:52:34 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/07 22:21:25 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/10 22:52:30 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,9 @@ typedef struct s_so_long {
 void		error_exit(void);
 
 t_so_long	*init_game(void);
+
+void		update(void *ptr);
+
+void		put_img_to_img(mlx_image_t *dst, mlx_image_t *src, uint32_t x, uint32_t y);
 
 #endif

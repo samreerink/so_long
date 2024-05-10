@@ -1,39 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                       ::::::::             */
-/*   main.c                                            :+:    :+:             */
+/*   update_game.c                                     :+:    :+:             */
 /*                                                    +:+                     */
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
-/*   Created: 2024/04/21 20:39:35 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/10 22:57:17 by sreerink      ########   odam.nl         */
+/*   Created: 2024/05/10 21:18:37 by sreerink      #+#    #+#                 */
+/*   Updated: 2024/05/10 22:53:55 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-void	error_exit(void)
+mlx_image_t	*get_frame_num(t_animation *a, int cur_frame)
 {
-	const char	*msg;
+	t_frame	*temp;
 
-	if (mlx_errno)
+	temp = a->frame;
+	while (cur_frame > 0)
 	{
-		msg = mlx_strerror(mlx_errno);
-		write(STDERR_FILENO, msg, ft_strlen(msg));
+		temp = temp->next;
+		cur_frame--;
 	}
-	exit(EXIT_FAILURE);
+	return (temp->img);
 }
 
-int	main(void)
+void	update(void *ptr)
 {
 	t_so_long	*game;
-	t_sprite_sheet	*sprite_sheet;
+	mlx_image_t	*frame;
 
-	game = init_game();
-	sprite_sheet = load_sprite_sheet("./assets/fox.png", 32, 32, game->mlx);
-	game->a = init_animation(sprite_sheet, 14, 1, 120, game->mlx);
-	mlx_loop_hook(game->mlx, update, game);
-	mlx_loop(game->mlx);
-	mlx_terminate(game->mlx);
-	return (EXIT_SUCCESS);
+	game = (t_so_long *)ptr;
+	frame = get_frame_num(game->a, game->a->current_frame);
+	put_img_to_img(game->foreground, frame, 0, 0);
+	update_animation(game->a, game->mlx->delta_time);
 }

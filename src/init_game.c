@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:40:43 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/07 22:09:05 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/10 21:25:58 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_so_long	*init_game(void)
 	game->foreground = mlx_new_image(game->mlx, WIDTH, HEIGTH);
 	if (!game->foreground)
 		error_exit();
+	game->a = NULL;
 	if (mlx_image_to_window(game->mlx, game->foreground, 0, 0) < 0)
 		error_exit();
 	return (game);

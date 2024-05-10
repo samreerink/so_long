@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 19:56:21 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/07 21:15:57 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/10 22:26:58 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ typedef struct s_frame {
 
 typedef struct s_animation {
 	struct s_frame	*frame;
+	int		frame_speed;
+	double		accum;
 	int		current_frame;
 	int		n_frames;
 } t_animation;
@@ -44,6 +46,8 @@ void		sprite_to_frame(mlx_image_t *img, t_sprite_sheet *s);
 
 void		add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx);
 
-t_animation	*init_animation(t_sprite_sheet *s, int n_frames, int row, mlx_t *mlx);
+void		update_animation(t_animation *a, double dt);
+
+t_animation	*init_animation(t_sprite_sheet *s, int n_frames, int row, int f_speed, mlx_t *mlx);
 
 #endif

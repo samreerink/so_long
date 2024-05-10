@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:09:47 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/07 21:09:56 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/10 22:37:02 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	sprite_to_frame(mlx_image_t *img, t_sprite_sheet *s)
 		s->cur_x = old_cur_x;
 		while (x < s->slice_width)
 		{
-			printf("y = %d cur_y = %d, x = %d cur_x = %d\n", y, s->cur_y, x, s->cur_x);
+//			printf("y = %d cur_y = %d, x = %d cur_x = %d\n", y, s->cur_y, x, s->cur_x);
 			index_src = (s->cur_y * s->img->width + s->cur_x) * 4;
 			index_dst = (y * s->slice_width + x) * 4;
 			img->pixels[index_dst] = s->img->pixels[index_src];
@@ -61,7 +61,7 @@ void	sprite_to_frame(mlx_image_t *img, t_sprite_sheet *s)
 		s->cur_y++;
 		y++;
 	}
-	printf("----------------------------------------------\n");
+//	printf("----------------------------------------------\n");
 }
 
 void	add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx)
@@ -88,7 +88,18 @@ void	add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx)
 	}
 }
 
-t_animation	*init_animation(t_sprite_sheet *s, int n_frames, int row, mlx_t *mlx)
+void	update_animation(t_animation *a, double dt)
+{
+	a->accum += dt * 1000;
+	if (a->accum > a->frame_speed)
+	{
+		a->accum -= a->frame_speed;
+		a->current_frame++;
+		a->current_frame %= a->n_frames;
+	}
+}
+
+t_animation	*init_animation(t_sprite_sheet *s, int n_frames, int row, int f_speed, mlx_t *mlx)
 {
 	t_animation	*a;
 
@@ -96,6 +107,8 @@ t_animation	*init_animation(t_sprite_sheet *s, int n_frames, int row, mlx_t *mlx
 	if (!a)
 		error_exit();
 	a->frame = NULL;
+	a->frame_speed = f_speed;
+	a->accum = 0;
 	a->current_frame = 0;
 	a->n_frames = n_frames;
 	while (n_frames > 0)
