@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/10 21:18:37 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/10 22:53:55 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/20 19:21:09 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	update(void *ptr)
 	mlx_image_t	*frame;
 
 	game = (t_so_long *)ptr;
-	frame = get_frame_num(game->a, game->a->current_frame);
-	put_img_to_img(game->foreground, frame, 0, 0);
-	update_animation(game->a, game->mlx->delta_time);
+	frame = get_frame_num(game->player->a, game->player->a->current_frame);
+	put_img_to_img(game->foreground, frame, game->player->y_pos, game->player->x_pos);
+	update_animation(game->player->a, game->mlx->delta_time);
 }

@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:09:47 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/10 22:37:02 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/16 21:11:00 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ t_sprite_sheet	*load_sprite_sheet(const char *file_path, int slice_h, int slice_
 
 	s = malloc(sizeof(t_sprite_sheet));
 	if (!s)
-		error_exit();
+		error_exit(NULL, "malloc");
 	texture = mlx_load_png(file_path);
 	if (!texture)
-		error_exit();
+		error_exit(NULL, NULL);
 	s->img = mlx_texture_to_image(mlx, texture);
 	mlx_delete_texture(texture);
 	s->cur_y = 0;
@@ -48,7 +48,6 @@ void	sprite_to_frame(mlx_image_t *img, t_sprite_sheet *s)
 		s->cur_x = old_cur_x;
 		while (x < s->slice_width)
 		{
-//			printf("y = %d cur_y = %d, x = %d cur_x = %d\n", y, s->cur_y, x, s->cur_x);
 			index_src = (s->cur_y * s->img->width + s->cur_x) * 4;
 			index_dst = (y * s->slice_width + x) * 4;
 			img->pixels[index_dst] = s->img->pixels[index_src];
@@ -61,7 +60,6 @@ void	sprite_to_frame(mlx_image_t *img, t_sprite_sheet *s)
 		s->cur_y++;
 		y++;
 	}
-//	printf("----------------------------------------------\n");
 }
 
 void	add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx)
@@ -71,10 +69,10 @@ void	add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx)
 
 	new_frame = malloc(sizeof(t_frame));
 	if (!new_frame)
-		error_exit();
+		error_exit(NULL, "malloc");
 	new_frame->img = mlx_new_image(mlx, s->slice_width, s->slice_height);
 	if (!new_frame->img)
-		error_exit();
+		error_exit(NULL, "malloc");
 	sprite_to_frame(new_frame->img, s);
 	new_frame->next = NULL;
 	if (!a->frame)
@@ -105,7 +103,7 @@ t_animation	*init_animation(t_sprite_sheet *s, int n_frames, int row, int f_spee
 
 	a = malloc(sizeof(t_animation));
 	if (!a)
-		error_exit();
+		error_exit(NULL, "malloc");
 	a->frame = NULL;
 	a->frame_speed = f_speed;
 	a->accum = 0;
