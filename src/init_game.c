@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:40:43 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/20 19:19:26 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/21 07:36:08 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	init_map(char *map_file, t_so_long *game)
 {
 	int	file;
 	char	*line;
-	size_t	line_len;
 
 	file = open(map_file, O_RDONLY);
 	if (file == -1)
@@ -74,7 +73,7 @@ void	init_map(char *map_file, t_so_long *game)
 	line = get_next_line(file);
 	if (!line)
 		error_exit(NULL, "get_next_line");
-	line_len = ft_strlen(line);
+	game->map->colums = ft_strlen(line);
 	while (line)
 	{
 		game->map->rows++;
@@ -82,7 +81,7 @@ void	init_map(char *map_file, t_so_long *game)
 			error_exit("Invalid map\n", NULL);
 		free(line);
 		line = get_next_line(file);
-		if (line_len != ft_strlen(line) && line)
+		if (game->map->colums != ft_strlen(line) && line)
 			error_exit("Invalid map\n", NULL);
 	}
 	free(line);
@@ -92,6 +91,8 @@ void	init_map(char *map_file, t_so_long *game)
 	|| game->map->p_amount == 0 || game->map->e_amount == 0)
 		error_exit("Invalid map\n", NULL);
 	write_map_array(map_file, game);
+	game->map->colums--;
+	printf("Rows = %zu, Cols = %zu\n", game->map->rows, game->map->colums);
 }
 
 t_so_long	*init_game(char *map_file)
@@ -101,15 +102,21 @@ t_so_long	*init_game(char *map_file)
 	game = ft_calloc(1, sizeof(t_so_long));
 	if (!game)
 		error_exit(NULL, "ft_calloc");
-	game->mlx = mlx_init(WIDTH, HEIGTH, "so_long", false);
+	game->map = ft_calloc(1, sizeof(t_map));
+	if (!game->map)
+		error_exit(NULL, "ft_calloc");
+	init_map(map_file, game);
+	game->width = (game->map->colums - 2) * 64 + 144;
+	game->height = game->map->rows * 64 + 80;
+	game->mlx = mlx_init(game->width, game->height, "so_long", false);
 	if (!game->mlx)
 		error_exit(NULL, NULL);
-	game->background = mlx_new_image(game->mlx, WIDTH, HEIGTH);
+	game->background = mlx_new_image(game->mlx, game->width, game->height);
 	if (!game->background)
 		error_exit(NULL, NULL);
 	if (mlx_image_to_window(game->mlx, game->background, 0, 0) < 0)
 		error_exit(NULL, NULL);
-	game->foreground = mlx_new_image(game->mlx, WIDTH, HEIGTH);
+	game->foreground = mlx_new_image(game->mlx, game->width, game->height);
 	if (!game->foreground)
 		error_exit(NULL, NULL);
 	if (mlx_image_to_window(game->mlx, game->foreground, 0, 0) < 0)
@@ -117,12 +124,12 @@ t_so_long	*init_game(char *map_file)
 	game->tiles = ft_calloc(1, sizeof(t_bg_tiles));
 	if (!game->tiles)
 		error_exit(NULL, "ft_calloc");
-	game->map = ft_calloc(1, sizeof(t_map));
-	if (!game->map)
-		error_exit(NULL, "ft_calloc");
-	init_map(map_file, game);
 	game->player = ft_calloc(1, sizeof(t_player));
 	if (!game->player)
 		error_exit(NULL, "ft_calloc");
+	game->chest = ft_calloc(1, sizeof(t_chest));
+	if (!game->player)
+		error_exit(NULL, "ft_calloc");
+	game->chest->n_chest = game->map->c_amount;
 	return (game);
 }

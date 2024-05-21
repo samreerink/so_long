@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:52:34 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/20 19:18:09 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/21 07:34:06 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 # include <stdbool.h>
 # include <fcntl.h>
 
-#define WIDTH 2000
-#define HEIGTH 2000
 
 typedef struct s_map {
 	char	**map_array;
@@ -29,6 +27,7 @@ typedef struct s_map {
 	size_t	p_amount;
 	size_t	e_amount;
 	size_t	rows;
+	size_t	colums;
 } t_map;
 
 typedef struct s_bg_tiles {
@@ -37,14 +36,27 @@ typedef struct s_bg_tiles {
 	mlx_image_t	*wall_top_r;
 	mlx_image_t	*wall_l;
 	mlx_image_t	*wall_m;
+	mlx_image_t	*wall_low_l;
+	mlx_image_t	*wall_low_r;
+	mlx_image_t	*wall_bottom_l;
+	mlx_image_t	*wall_bottom_r;
 	mlx_image_t	*floor;
+	mlx_image_t	*object;
 } t_bg_tiles;
 
 typedef struct s_player {
 	t_animation	*a;
+	size_t		moves_n;
+	size_t		j_pos;
+	size_t		i_pos;
 	uint32_t	y_pos;
 	uint32_t	x_pos;
 } t_player;
+
+typedef struct s_chest {
+	t_animation	*a;
+	size_t		n_chest;
+} t_chest;
 
 typedef struct s_so_long {
 	mlx_t		*mlx;
@@ -53,6 +65,9 @@ typedef struct s_so_long {
 	t_bg_tiles	*tiles;
 	t_map		*map;
 	t_player	*player;
+	t_chest		*chest;
+	uint32_t	width;
+	uint32_t	height;
 } t_so_long;
 
 
@@ -61,6 +76,8 @@ typedef struct s_so_long {
 void		error_exit(char *msg, char *p_msg);
 
 t_so_long	*init_game(char *map_file);
+
+void		key_update(mlx_key_data_t keydata, void* ptr);
 
 void		update(void *ptr);
 
