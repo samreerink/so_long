@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:40:43 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/21 07:36:08 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/22 04:47:24 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ void	init_map(char *map_file, t_so_long *game)
 		error_exit("Invalid map\n", NULL);
 	write_map_array(map_file, game);
 	game->map->colums--;
-	printf("Rows = %zu, Cols = %zu\n", game->map->rows, game->map->colums);
 }
 
 t_so_long	*init_game(char *map_file)
@@ -108,6 +107,10 @@ t_so_long	*init_game(char *map_file)
 	init_map(map_file, game);
 	game->width = (game->map->colums - 2) * 64 + 144;
 	game->height = game->map->rows * 64 + 80;
+	if (game->width < 500)
+		game->width = 500;
+	if (game->height < 300)
+		game->height = 300;
 	game->mlx = mlx_init(game->width, game->height, "so_long", false);
 	if (!game->mlx)
 		error_exit(NULL, NULL);
@@ -131,5 +134,9 @@ t_so_long	*init_game(char *map_file)
 	if (!game->player)
 		error_exit(NULL, "ft_calloc");
 	game->chest->n_chest = game->map->c_amount;
+	game->exit = ft_calloc(1, sizeof(t_exit));
+	if (!game->exit)
+		error_exit(NULL, "ft_calloc");
+	game->exit->exit_open = false;
 	return (game);
 }

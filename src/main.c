@@ -6,41 +6,12 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:39:35 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/21 07:53:34 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/22 05:17:00 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-void	error_exit(char *msg, char *p_msg)
-{
-	const char	*mlx_msg;
-
-	write(STDERR_FILENO, "Error\n", 6);
-	if (msg)
-		write(STDERR_FILENO, msg, ft_strlen(msg));
-	if (p_msg)
-		perror(p_msg);
-	if (mlx_errno)
-	{
-		mlx_msg = mlx_strerror(mlx_errno);
-		write(STDERR_FILENO, mlx_msg, ft_strlen(mlx_msg));
-	}
-	exit(EXIT_FAILURE);
-}
-
-mlx_image_t	*load_png_to_image(char *path_png, t_so_long *game)
-{
-	mlx_texture_t	*texture;
-	mlx_image_t	*img;
-
-	texture = mlx_load_png(path_png);
-	if (!texture)
-		error_exit(NULL, NULL);
-	img = mlx_texture_to_image(game->mlx, texture);
-	mlx_delete_texture(texture);
-	return (img);
-}
 
 void	load_background_assets(t_so_long *game)
 {
@@ -55,6 +26,8 @@ void	load_background_assets(t_so_long *game)
 	game->tiles->wall_bottom_r = load_png_to_image("./assets/tile035.png", game);
 	game->tiles->floor = load_png_to_image("./assets/wooden.png", game);
 	game->tiles->object = load_png_to_image("./assets/tile002.png", game);
+	game->exit->closed = load_png_to_image("./assets/wooden_door_closed.png", game);
+	game->exit->open = load_png_to_image("./assets/wooden_door_open.png", game);
 }
 
 void	draw_top_bg(char **map, t_so_long *game)
@@ -115,6 +88,14 @@ void	draw_between_rows(char	**map, t_so_long *game)
 				game->player->i_pos = i;
 				game->player->y_pos = j * 64;
 				game->player->x_pos = i * 64 - 64;
+			}
+			else if (map[j][i] == 'E')
+			{
+				game->exit->j_pos = j;
+				game->exit->i_pos = i;
+				game->exit->y_pos = y;
+				game->exit->x_pos = x;
+				put_img_to_img(game->background, game->exit->closed, y, x);
 			}
 			x += 64;
 			i++;
@@ -216,10 +197,15 @@ int	main(int argc, char *argv[])
 	sprite_sheet = load_sprite_sheet("./assets/player_02.png", 92, 192, game->mlx);
 	game->player->a = init_animation(sprite_sheet, 6, 0, 120, game->mlx);
 	sprite_sheet = load_sprite_sheet("./assets/chest_01.png", 64, 64, game->mlx);
-	game->chest->a = init_animation(sprite_sheet, 4, 0, 120, game->mlx);
+	game->chest->a = init_animation(sprite_sheet, 4, 0, 1, game->mlx);
 	draw_chest(game);
+	sprite_sheet = load_sprite_sheet("./assets/Effect.png", 192, 192, game->mlx);
+	game->effect = init_animation(sprite_sheet, 10, 0, 120, game->mlx);
+	sprite_sheet = load_sprite_sheet("./assets/chest_02.png", 64, 64, game->mlx);
+	game->gold_chest = init_animation(sprite_sheet, 4, 0, 120, game->mlx);
 	mlx_loop_hook(game->mlx, update, game);
 	mlx_key_hook(game->mlx, key_update, game);
+//	mlx_close_hook(game->mlx, exit_game, game);
 	mlx_loop(game->mlx);
 	mlx_terminate(game->mlx);
 	return (EXIT_SUCCESS);
