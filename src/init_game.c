@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:40:43 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/22 04:47:24 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/24 16:48:55 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ bool	check_line(char *line, t_map *map)
 	size_t	i;
 
 	i = 0;
+	if (line[0] != '1' || line[map->colums - 2] != '1')
+		return (false);
 	while (line[i])
 	{
 		if (line[i] == 'C')
@@ -28,6 +30,23 @@ bool	check_line(char *line, t_map *map)
 		else if (line[i] != '0' && line[i] != '1' && line[i] != '\n')
 			return (false);
 		i++;
+	}
+	return (true);
+}
+
+bool	check_valid_path(t_map *map_orginal)
+{
+	size_t	j;
+	size_t	i;
+	char	**map;
+
+	j = 0;
+	while (map[j])
+	{
+		i = 0;
+		while (map[j][i] != 'P' && map[j][i + 1])
+			i++;
+		j++;
 	}
 	return (true);
 }
