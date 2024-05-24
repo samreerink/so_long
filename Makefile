@@ -6,7 +6,7 @@
 #    By: sreerink <sreerink@student.codam.nl>        +#+                       #
 #                                                   +#+                        #
 #    Created: 2024/02/10 21:57:52 by sreerink      #+#    #+#                  #
-#    Updated: 2024/05/22 05:02:27 by sreerink      ########   odam.nl          #
+#    Updated: 2024/05/24 22:23:35 by sreerink      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRC_DIR=	src
 OBJ_DIR=	obj
 
 SRCS=		$(addprefix $(SRC_DIR)/, main.c init_game.c animation.c \
-		update_game.c image_utils.c exit_game.c)	
+		map_check.c update_game.c image_utils.c exit_game.c)	
 
 OBJ=		$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 

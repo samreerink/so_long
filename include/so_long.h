@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:52:34 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/22 05:14:35 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/24 22:18:37 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ typedef struct s_map {
 	size_t	e_amount;
 	size_t	rows;
 	size_t	colums;
+	size_t	player_j;
+	size_t	player_i;
 } t_map;
 
 typedef struct s_bg_tiles {
@@ -94,6 +96,8 @@ void		error_exit(char *msg, char *p_msg);
 
 t_so_long	*init_game(char *map_file);
 
+void		check_map(t_so_long *game);
+
 void		key_update(mlx_key_data_t keydata, void *ptr);
 
 void		update(void *ptr);
@@ -101,7 +105,5 @@ void		update(void *ptr);
 mlx_image_t	*load_png_to_image(char *path_png, t_so_long *game);
 
 void		put_img_to_img(mlx_image_t *dst, mlx_image_t *src, uint32_t y, uint32_t x);
-
-void		exit_game(void *ptr);
 
 #endif

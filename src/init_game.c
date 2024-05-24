@@ -6,50 +6,11 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:40:43 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/24 16:48:55 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/24 22:36:37 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
-
-bool	check_line(char *line, t_map *map)
-{
-	size_t	i;
-
-	i = 0;
-	if (line[0] != '1' || line[map->colums - 2] != '1')
-		return (false);
-	while (line[i])
-	{
-		if (line[i] == 'C')
-			map->c_amount++;
-		else if (line[i] == 'P')
-			map->p_amount++;
-		else if (line[i] == 'E')
-			map->e_amount++;
-		else if (line[i] != '0' && line[i] != '1' && line[i] != '\n')
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-bool	check_valid_path(t_map *map_orginal)
-{
-	size_t	j;
-	size_t	i;
-	char	**map;
-
-	j = 0;
-	while (map[j])
-	{
-		i = 0;
-		while (map[j][i] != 'P' && map[j][i + 1])
-			i++;
-		j++;
-	}
-	return (true);
-}
 
 void	write_map_array(char *map_file, t_so_long *game)
 {
@@ -96,8 +57,6 @@ void	init_map(char *map_file, t_so_long *game)
 	while (line)
 	{
 		game->map->rows++;
-		if (!check_line(line, game->map))
-			error_exit("Invalid map\n", NULL);
 		free(line);
 		line = get_next_line(file);
 		if (game->map->colums != ft_strlen(line) && line)
@@ -106,9 +65,6 @@ void	init_map(char *map_file, t_so_long *game)
 	free(line);
 	if (close(file) == -1)
 		error_exit(NULL, "close");
-	if (game->map->p_amount > 1 || game->map->e_amount > 1 \
-	|| game->map->p_amount == 0 || game->map->e_amount == 0)
-		error_exit("Invalid map\n", NULL);
 	write_map_array(map_file, game);
 	game->map->colums--;
 }
@@ -152,7 +108,6 @@ t_so_long	*init_game(char *map_file)
 	game->chest = ft_calloc(1, sizeof(t_chest));
 	if (!game->player)
 		error_exit(NULL, "ft_calloc");
-	game->chest->n_chest = game->map->c_amount;
 	game->exit = ft_calloc(1, sizeof(t_exit));
 	if (!game->exit)
 		error_exit(NULL, "ft_calloc");

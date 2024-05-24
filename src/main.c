@@ -6,12 +6,11 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:39:35 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/22 05:17:00 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/24 22:27:43 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
-
 
 void	load_background_assets(t_so_long *game)
 {
@@ -192,6 +191,7 @@ int	main(int argc, char *argv[])
 	if (argc != 2)
 		error_exit("Invalid amount of arguments\n", NULL);
 	game = init_game(argv[1]);
+	check_map(game);
 	load_background_assets(game);
 	draw_background(game);
 	sprite_sheet = load_sprite_sheet("./assets/player_02.png", 92, 192, game->mlx);
