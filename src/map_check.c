@@ -6,11 +6,18 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/24 20:06:54 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/24 23:40:40 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/26 00:20:52 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
+
+void	store_player_data(t_map *m, size_t j, size_t i)
+{
+	m->p_amount++;
+	m->player_j = j;
+	m->player_i = i;
+}
 
 bool	check_between_line(t_map *m)
 {
@@ -28,10 +35,11 @@ bool	check_between_line(t_map *m)
 			if (array[j][i] == 'C')
 				m->c_amount++;
 			else if (array[j][i] == 'P')
-				m->p_amount++;
+				store_player_data(m, j, i);
 			else if (array[j][i] == 'E')
 				m->e_amount++;
-			else if (array[j][i] != '0' && array[j][i] != '1' && array[j][i] != '\n')
+			else if (array[j][i] != '0' && array[j][i] != '1' \
+				&& array[j][i] != '\n')
 				return (false);
 			i++;
 		}
@@ -69,9 +77,40 @@ bool	check_walls(t_map *m)
 	return (true);
 }
 
+void	flood_fill_map(char **map, size_t j, size_t i)
+{
+	if (map[j][i] == '1' || map[j][i] == 'X')
+		return ;
+	map[j][i] = 'X';
+	flood_fill_map(map, j, i - 1);
+	flood_fill_map(map, j, i + 1);
+	flood_fill_map(map, j - 1, i);
+	flood_fill_map(map, j + 1, i);
+}
+
+bool	check_flood_map(char **map_copy)
+{
+	size_t	j;
+	size_t	i;
+
+	j = 1;
+	while (map_copy[j])
+	{
+		i = 0;
+		while (map_copy[j][i])
+		{
+			if (map_copy[j][i] == 'C' || map_copy[j][i] == 'E')
+				return (false);
+			i++;
+		}
+		j++;
+	}
+	return (true);
+}
+
 void	check_map(t_so_long *game)
 {
-	char	**map_cpy;
+	char	**map_copy;
 
 	if (!check_between_line(game->map))
 		error_exit("Invalid map\n", NULL);
@@ -80,7 +119,14 @@ void	check_map(t_so_long *game)
 	game->chest->n_chest = game->map->c_amount;
 	if (!check_walls(game->map))
 		error_exit("Invalid map\n", NULL);
-	map_cpy = ft_copy_array(game->map->map_array);
-	if (!map_cpy)
+	map_copy = ft_copy_array(game->map->map_array);
+	if (!map_copy)
 		error_exit(NULL, "ft_copy_array");
+	flood_fill_map(map_copy, game->map->player_j, game->map->player_i);
+	if (!check_flood_map(map_copy))
+	{
+		ft_free_array(map_copy);
+		error_exit("Invalid map\n", NULL);
+	}
+	ft_free_array(map_copy);
 }

@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:52:34 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/24 22:18:37 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/25 22:55:31 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ typedef struct s_so_long {
 // Functions
 
 void		error_exit(char *msg, char *p_msg);
+
+void		exit_game(void *ptr);
 
 t_so_long	*init_game(char *map_file);
 

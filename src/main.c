@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:39:35 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/24 22:27:43 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/25 23:59:48 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,25 @@ void	draw_first_row(char **map, t_so_long *game)
 	put_img_to_img(game->background, game->tiles->wall_l, 28, x);
 }
 
+void	start_exit_data(char c, size_t j, size_t i, t_so_long *g)
+{
+	if (c == 'P')
+	{
+		g->player->j_pos = j;
+		g->player->i_pos = i;
+		g->player->y_pos = j * 64;
+		g->player->x_pos = i * 64 - 64;
+	}
+	else if (c == 'E')
+	{
+		g->exit->j_pos = j;
+		g->exit->i_pos = i;
+		g->exit->y_pos = j * 64 + 28;
+		g->exit->x_pos = i * 64 + 8;
+		put_img_to_img(g->background, g->exit->closed, j * 64 + 28, i * 64 + 8);
+	}
+}
+
 void	draw_between_rows(char	**map, t_so_long *game)
 {
 	size_t		i;
@@ -81,21 +100,8 @@ void	draw_between_rows(char	**map, t_so_long *game)
 			put_img_to_img(game->background, game->tiles->floor, y, x);
 			if (map[j][i] == '1')
 				put_img_to_img(game->background, game->tiles->object, y, x);
-			else if (map[j][i] == 'P')
-			{
-				game->player->j_pos = j;
-				game->player->i_pos = i;
-				game->player->y_pos = j * 64;
-				game->player->x_pos = i * 64 - 64;
-			}
-			else if (map[j][i] == 'E')
-			{
-				game->exit->j_pos = j;
-				game->exit->i_pos = i;
-				game->exit->y_pos = y;
-				game->exit->x_pos = x;
-				put_img_to_img(game->background, game->exit->closed, y, x);
-			}
+			else if (map[j][i] == 'P' || map[j][i] == 'E')
+				start_exit_data(map[j][i], j, i, game);
 			x += 64;
 			i++;
 		}
@@ -205,7 +211,7 @@ int	main(int argc, char *argv[])
 	game->gold_chest = init_animation(sprite_sheet, 4, 0, 120, game->mlx);
 	mlx_loop_hook(game->mlx, update, game);
 	mlx_key_hook(game->mlx, key_update, game);
-//	mlx_close_hook(game->mlx, exit_game, game);
+	mlx_close_hook(game->mlx, exit_game, game);
 	mlx_loop(game->mlx);
 	mlx_terminate(game->mlx);
 	return (EXIT_SUCCESS);

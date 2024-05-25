@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/10 21:18:37 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/22 05:01:00 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/25 23:05:27 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	key_update(mlx_key_data_t keydata, void *ptr)
 	map = game->map->map_array;
 	j = game->player->j_pos;
 	i = game->player->i_pos;
+	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
+		exit_game(game);
 	if (game->game_won)
 		return ;
 	if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS && map[j][i + 1] != '1')

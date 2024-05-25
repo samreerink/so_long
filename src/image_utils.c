@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/08 20:48:39 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/22 05:15:38 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/26 00:14:34 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 mlx_image_t	*load_png_to_image(char *path_png, t_so_long *game)
 {
 	mlx_texture_t	*texture;
-	mlx_image_t	*img;
+	mlx_image_t		*img;
 
 	texture = mlx_load_png(path_png);
 	if (!texture)

@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/22 05:01:33 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/24 20:18:59 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/25 23:20:31 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,14 @@ void	error_exit(char *msg, char *p_msg)
 		write(STDERR_FILENO, mlx_msg, ft_strlen(mlx_msg));
 	}
 	exit(EXIT_FAILURE);
+}
+
+void	exit_game(void *ptr)
+{
+	t_so_long	*game;
+
+	game = (t_so_long *)ptr;
+	printf("Inside exit_game() function\n");
+	mlx_terminate(game->mlx);
+	exit(EXIT_SUCCESS);
 }

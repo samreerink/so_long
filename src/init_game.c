@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:40:43 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/24 22:36:37 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/25 20:20:30 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	init_map(char *map_file, t_so_long *game)
 		error_exit(NULL, map_file);
 	line = get_next_line(file);
 	if (!line)
-		error_exit(NULL, "get_next_line");
+		error_exit("Invalid map\n", NULL);
 	game->map->colums = ft_strlen(line);
 	while (line)
 	{
