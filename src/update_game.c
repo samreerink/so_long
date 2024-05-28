@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/10 21:18:37 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/25 23:05:27 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/28 17:08:52 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,9 @@ void	game_win_loop(t_so_long *game)
 	c_frame = get_frame_num(game->gold_chest, game->gold_chest->current_frame);
 	ft_memset(game->background->pixels, 0xFF000000, game->background->width * game->background->height * sizeof(uint32_t));
 	ft_memset(game->foreground->pixels, 0xFF000000, game->foreground->width * game->foreground->height * sizeof(uint32_t));
-	put_img_to_img(game->background, e_frame, game->player->y_pos - 80, game->player->x_pos + 188);
-	put_img_to_img(game->foreground, c_frame, game->player->y_pos, game->player->x_pos + 250);
-	put_img_to_img(game->foreground, p_frame, game->player->y_pos, game->player->x_pos);
+	put_img(game->background, e_frame, game->player->y_pos - 80, game->player->x_pos + 188);
+	put_img(game->foreground, c_frame, game->player->y_pos, game->player->x_pos + 250);
+	put_img(game->foreground, p_frame, game->player->y_pos, game->player->x_pos);
 	update_animation(game->effect, game->mlx->delta_time);
 	update_animation(game->gold_chest, game->mlx->delta_time);
 	update_animation(game->player->a, game->mlx->delta_time);
@@ -115,22 +115,22 @@ void	game_loop(t_so_long *game)
 	if (game->chest->open_chest)
 	{
 		c_frame = get_frame_num(game->chest->a, game->chest->a->current_frame);
-		put_img_to_img(game->foreground, c_frame, game->chest->open_y, game->chest->open_x);
+		put_img(game->foreground, c_frame, game->chest->open_y, game->chest->open_x);
 		update_animation(game->chest->a, game->mlx->delta_time);
 		if (!game->chest->a->current_frame)
 		{
 			c_frame = get_frame_num(game->chest->a, 3);
-			put_img_to_img(game->background, c_frame, game->chest->open_y, game->chest->open_x);
+			put_img(game->background, c_frame, game->chest->open_y, game->chest->open_x);
 			game->chest->open_chest = false;
 		}
 	}
 	if (game->chest->n_chest == 0)
 	{
 		game->exit->exit_open = true;
-		put_img_to_img(game->background, game->exit->open, game->exit->y_pos, game->exit->x_pos);
+		put_img(game->background, game->exit->open, game->exit->y_pos, game->exit->x_pos);
 	}
 	ft_memset(game->foreground->pixels, 0xFF000000, game->foreground->width * game->foreground->height * sizeof(uint32_t));
-	put_img_to_img(game->foreground, p_frame, game->player->y_pos, game->player->x_pos);
+	put_img(game->foreground, p_frame, game->player->y_pos, game->player->x_pos);
 	update_animation(game->player->a, game->mlx->delta_time);
 }
 

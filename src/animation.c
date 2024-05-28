@@ -6,33 +6,34 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:09:47 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/21 22:18:07 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/27 22:36:54 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-t_sprite_sheet	*load_sprite_sheet(const char *file_path, int slice_h, int slice_w, mlx_t *mlx)
+t_sprite	*load_sprite_sheet(const char *file, int h, int w, mlx_t *mlx)
 {
-	t_sprite_sheet	*s;
+	t_sprite	*s;
 	mlx_texture_t	*texture;
 
-	s = malloc(sizeof(t_sprite_sheet));
+	s = malloc(sizeof(t_sprite));
 	if (!s)
 		error_exit(NULL, "malloc");
-	texture = mlx_load_png(file_path);
+	texture = mlx_load_png(file);
 	if (!texture)
 		error_exit(NULL, NULL);
-	s->img = mlx_texture_to_image(mlx, texture);
+	s->mlx = mlx;
+	s->img = mlx_texture_to_image(s->mlx, texture);
 	mlx_delete_texture(texture);
 	s->cur_y = 0;
 	s->cur_x = 0;
-	s->slice_height = slice_h;
-	s->slice_width = slice_w;
+	s->slice_height = h;
+	s->slice_width = w;
 	return (s);
 }
 
-void	sprite_to_frame(mlx_image_t *img, t_sprite_sheet *s)
+void	sprite_to_frame(mlx_image_t *img, t_sprite *s)
 {
 	uint32_t	index_src;
 	uint32_t	index_dst;
@@ -62,7 +63,7 @@ void	sprite_to_frame(mlx_image_t *img, t_sprite_sheet *s)
 	}
 }
 
-void	add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx)
+void	add_frame(t_animation *a, t_sprite *s)
 {
 	t_frame	*new_frame;
 	t_frame	*temp;
@@ -70,7 +71,7 @@ void	add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx)
 	new_frame = malloc(sizeof(t_frame));
 	if (!new_frame)
 		error_exit(NULL, "malloc");
-	new_frame->img = mlx_new_image(mlx, s->slice_width, s->slice_height);
+	new_frame->img = mlx_new_image(s->mlx, s->slice_width, s->slice_height);
 	if (!new_frame->img)
 		error_exit(NULL, "malloc");
 	sprite_to_frame(new_frame->img, s);
@@ -97,7 +98,7 @@ void	update_animation(t_animation *a, double dt)
 	}
 }
 
-t_animation	*init_animation(t_sprite_sheet *s, int n_frames, int row, int f_speed, mlx_t *mlx)
+t_animation	*init_animation(t_sprite *s, int n_frames, int row, int f_speed)
 {
 	t_animation	*a;
 
@@ -112,7 +113,7 @@ t_animation	*init_animation(t_sprite_sheet *s, int n_frames, int row, int f_spee
 	while (n_frames > 0)
 	{
 		s->cur_y = row * s->slice_height;
-		add_frame(a, s, mlx);
+		add_frame(a, s);
 		n_frames--;
 	}
 	return (a);

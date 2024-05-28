@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 19:56:21 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/21 22:27:38 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/27 22:29:55 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@
 
 typedef struct s_sprite_sheet {
 	mlx_image_t	*img;
+	mlx_t		*mlx;
 	uint32_t	slice_height;
 	uint32_t	slice_width;
 	uint32_t	cur_y;
 	uint32_t	cur_x;
-} t_sprite_sheet;
+} t_sprite;
 
 typedef struct s_frame {
 	mlx_image_t	*img;
@@ -40,14 +41,14 @@ typedef struct s_animation {
 
 // Functions
 
-t_sprite_sheet	*load_sprite_sheet(const char *file_path, int slice_h, int slice_w, mlx_t *mlx);
+t_sprite	*load_sprite_sheet(const char *file, int h, int w, mlx_t *mlx);
 
-void		sprite_to_frame(mlx_image_t *img, t_sprite_sheet *s);
+void		sprite_to_frame(mlx_image_t *img, t_sprite *s);
 
-void		add_frame(t_animation *a, t_sprite_sheet *s, mlx_t *mlx);
+void		add_frame(t_animation *a, t_sprite *s);
 
 void		update_animation(t_animation *a, double dt);
 
-t_animation	*init_animation(t_sprite_sheet *s, int n_frames, int row, int f_speed, mlx_t *mlx);
+t_animation	*init_animation(t_sprite *s, int n_frames, int row, int f_speed);
 
 #endif

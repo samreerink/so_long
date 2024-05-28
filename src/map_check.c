@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/24 20:06:54 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/26 00:20:52 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/28 16:20:28 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,37 +73,6 @@ bool	check_walls(t_map *m)
 		if (m->map_array[i][0] != '1' || m->map_array[i][m->colums - 1] != '1')
 			return (false);
 		i++;
-	}
-	return (true);
-}
-
-void	flood_fill_map(char **map, size_t j, size_t i)
-{
-	if (map[j][i] == '1' || map[j][i] == 'X')
-		return ;
-	map[j][i] = 'X';
-	flood_fill_map(map, j, i - 1);
-	flood_fill_map(map, j, i + 1);
-	flood_fill_map(map, j - 1, i);
-	flood_fill_map(map, j + 1, i);
-}
-
-bool	check_flood_map(char **map_copy)
-{
-	size_t	j;
-	size_t	i;
-
-	j = 1;
-	while (map_copy[j])
-	{
-		i = 0;
-		while (map_copy[j][i])
-		{
-			if (map_copy[j][i] == 'C' || map_copy[j][i] == 'E')
-				return (false);
-			i++;
-		}
-		j++;
 	}
 	return (true);
 }

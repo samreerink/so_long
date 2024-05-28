@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/08 20:48:39 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/26 00:14:34 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/28 17:32:20 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ mlx_image_t	*load_png_to_image(char *path_png, t_so_long *game)
 	return (img);
 }
 
-void	put_img_to_img(mlx_image_t *dst, mlx_image_t *src, uint32_t y, uint32_t x)
+void	put_img(mlx_image_t *dst, mlx_image_t *src, uint32_t y, uint32_t x)
 {
 	uint32_t	i;
 	uint32_t	j;
@@ -43,10 +43,7 @@ void	put_img_to_img(mlx_image_t *dst, mlx_image_t *src, uint32_t y, uint32_t x)
 		{
 			index_dst = (y * dst->width + x) * 4;
 			index_src = (i * src->width + j) * 4;
-			dst->pixels[index_dst] = src->pixels[index_src];
-			dst->pixels[index_dst + 1] = src->pixels[index_src + 1];
-			dst->pixels[index_dst + 2] = src->pixels[index_src + 2];
-			dst->pixels[index_dst + 3] = src->pixels[index_src + 3];
+			px_to_px(dst, src, index_dst, index_src);
 			j++;
 			x++;
 		}
