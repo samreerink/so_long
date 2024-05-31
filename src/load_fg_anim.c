@@ -1,30 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                       ::::::::             */
-/*   main.c                                            :+:    :+:             */
+/*   load_fg_anim.c                                    :+:    :+:             */
 /*                                                    +:+                     */
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
-/*   Created: 2024/04/21 20:39:35 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/28 18:32:36 by sreerink      ########   odam.nl         */
+/*   Created: 2024/05/28 18:23:34 by sreerink      #+#    #+#                 */
+/*   Updated: 2024/05/31 23:00:51 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-int	main(int argc, char *argv[])
+void	load_fg_animations(t_so_long *game)
 {
-	t_so_long	*game;
+	t_sprite	*s;
 
-	if (argc != 2)
-		error_exit("Invalid amount of arguments\n", NULL);
-	game = init_game(argv[1]);
-	draw_background(game);
-	load_fg_animations(game);
-	mlx_loop_hook(game->mlx, update, game);
-	mlx_key_hook(game->mlx, key_update, game);
-	mlx_close_hook(game->mlx, exit_game, game);
-	mlx_loop(game->mlx);
-	mlx_terminate(game->mlx);
-	return (EXIT_SUCCESS);
+	s = load_sprite_sheet("./assets/player_02.png", 92, 192, game->mlx);
+	game->player->a = init_animation(s, 6, 0, 120);
+	s = load_sprite_sheet("./assets/Effect.png", 192, 192, game->mlx);
+	game->effect = init_animation(s, 10, 0, 120);
+	s = load_sprite_sheet("./assets/chest_02.png", 64, 64, game->mlx);
+	game->gold_chest = init_animation(s, 4, 0, 120);
 }

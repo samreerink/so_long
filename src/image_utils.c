@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/08 20:48:39 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/28 17:32:20 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/31 23:57:18 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,16 @@ mlx_image_t	*load_png_to_image(char *path_png, t_so_long *game)
 	img = mlx_texture_to_image(game->mlx, texture);
 	mlx_delete_texture(texture);
 	return (img);
+}
+
+void	clear_image(mlx_image_t *img)
+{
+	uint32_t	h;
+	uint32_t	w;
+
+	h = img->height;
+	w = img->width;
+	ft_memset(img->pixels, 0xFF000000, w * h * sizeof(uint32_t));
 }
 
 void	put_img(mlx_image_t *dst, mlx_image_t *src, uint32_t y, uint32_t x)

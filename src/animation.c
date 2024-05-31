@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:09:47 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/27 22:36:54 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/05/31 22:55:08 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,7 @@ void	sprite_to_frame(mlx_image_t *img, t_sprite *s)
 		{
 			index_src = (s->cur_y * s->img->width + s->cur_x) * 4;
 			index_dst = (y * s->slice_width + x) * 4;
-			img->pixels[index_dst] = s->img->pixels[index_src];
-			img->pixels[index_dst + 1] = s->img->pixels[index_src + 1];
-			img->pixels[index_dst + 2] = s->img->pixels[index_src + 2];
-			img->pixels[index_dst + 3] = s->img->pixels[index_src + 3];
+			px_to_px(img, s->img, index_dst, index_src);
 			s->cur_x++;
 			x++;
 		}

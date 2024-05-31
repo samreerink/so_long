@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:52:34 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/28 17:01:50 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/01 00:47:06 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ typedef struct s_exit {
 
 typedef struct s_so_long {
 	mlx_t		*mlx;
-	mlx_image_t	*background;
-	mlx_image_t	*foreground;
+	mlx_image_t	*bg;
+	mlx_image_t	*fg;
 	t_bg_tiles	*tiles;
 	t_map		*map;
 	t_player	*player;
@@ -108,6 +108,8 @@ mlx_image_t	*load_png_to_image(char *path_png, t_so_long *game);
 
 void		px_to_px(mlx_image_t *d, mlx_image_t *s, uint32_t i_dst, uint32_t i_src);
 
+void		clear_image(mlx_image_t *img);
+
 void		put_img(mlx_image_t *dst, mlx_image_t *src, uint32_t y, uint32_t x);
 
 void		init_map(char *map_file, t_so_long *game);
@@ -115,8 +117,6 @@ void		init_map(char *map_file, t_so_long *game);
 void		flood_fill_map(char **map, size_t j, size_t i);
 
 bool		check_flood_map(char **map_copy);
-
-void		load_background_assets(t_so_long *g);
 
 void		draw_background(t_so_long *game);
 
@@ -133,5 +133,15 @@ void		draw_bottom_bg(char **map, t_so_long *game);
 void		draw_chest(t_so_long *game);
 
 void		start_exit_data(char c, size_t j, size_t i, t_so_long *g);
+
+void		load_fg_animations(t_so_long *game);
+
+void		move_right(t_so_long *game);
+
+void		move_left(t_so_long *game);
+
+void		move_up(t_so_long *game);
+
+void		move_down(t_so_long *game);
 
 #endif
