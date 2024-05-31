@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/27 21:21:34 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/27 21:21:36 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/01 01:29:31 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	write_map_array(char *map_file, t_so_long *game)
 {
-	int	file;
+	int		file;
 	char	*line;
 	size_t	i;
 
@@ -43,7 +43,7 @@ void	write_map_array(char *map_file, t_so_long *game)
 
 void	init_map(char *map_file, t_so_long *game)
 {
-	int	file;
+	int		file;
 	char	*line;
 
 	file = open(map_file, O_RDONLY);

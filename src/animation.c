@@ -14,7 +14,7 @@
 
 t_sprite	*load_sprite_sheet(const char *file, int h, int w, mlx_t *mlx)
 {
-	t_sprite	*s;
+	t_sprite		*s;
 	mlx_texture_t	*texture;
 
 	s = malloc(sizeof(t_sprite));
