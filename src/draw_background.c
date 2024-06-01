@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/27 20:54:30 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/31 23:50:01 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/01 21:11:01 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,7 @@ void	draw_background(t_so_long *game)
 	draw_bottom_bg(map, game);
 	s = load_sprite_sheet("./assets/chest_01.png", 64, 64, game->mlx);
 	game->chest->a = init_animation(s, 4, 0, 1);
+	if (!game->chest->a)
+		error_exit(NULL, "init_animation", game);
 	draw_chest(game);
 }

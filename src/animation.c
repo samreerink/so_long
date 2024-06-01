@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:09:47 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/31 22:55:08 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/01 21:13:15 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,13 @@ t_sprite	*load_sprite_sheet(const char *file, int h, int w, mlx_t *mlx)
 
 	s = malloc(sizeof(t_sprite));
 	if (!s)
-		error_exit(NULL, "malloc");
+		return (NULL);
 	texture = mlx_load_png(file);
 	if (!texture)
-		error_exit(NULL, NULL);
+	{
+		free(s);
+		return (NULL);
+	}
 	s->mlx = mlx;
 	s->img = mlx_texture_to_image(s->mlx, texture);
 	mlx_delete_texture(texture);
@@ -60,17 +63,17 @@ void	sprite_to_frame(mlx_image_t *img, t_sprite *s)
 	}
 }
 
-void	add_frame(t_animation *a, t_sprite *s)
+bool	add_frame(t_animation *a, t_sprite *s)
 {
 	t_frame	*new_frame;
 	t_frame	*temp;
 
 	new_frame = malloc(sizeof(t_frame));
 	if (!new_frame)
-		error_exit(NULL, "malloc");
+		return (false);
 	new_frame->img = mlx_new_image(s->mlx, s->slice_width, s->slice_height);
 	if (!new_frame->img)
-		error_exit(NULL, "malloc");
+		return (false);
 	sprite_to_frame(new_frame->img, s);
 	new_frame->next = NULL;
 	if (!a->frame)
@@ -82,6 +85,7 @@ void	add_frame(t_animation *a, t_sprite *s)
 			temp = temp->next;
 		temp->next = new_frame;
 	}
+	return (true);
 }
 
 void	update_animation(t_animation *a, double dt)
@@ -99,9 +103,11 @@ t_animation	*init_animation(t_sprite *s, int n_frames, int row, int f_speed)
 {
 	t_animation	*a;
 
+	if (!s)
+		return (NULL);
 	a = malloc(sizeof(t_animation));
 	if (!a)
-		error_exit(NULL, "malloc");
+		return (NULL);
 	a->frame = NULL;
 	a->frame_speed = f_speed;
 	a->accum = 0;
@@ -110,8 +116,13 @@ t_animation	*init_animation(t_sprite *s, int n_frames, int row, int f_speed)
 	while (n_frames > 0)
 	{
 		s->cur_y = row * s->slice_height;
-		add_frame(a, s);
+		if (!add_frame(a, s))
+		{
+			free_anim(a);
+			return (NULL);
+		}
 		n_frames--;
 	}
+	free(s);
 	return (a);
 }

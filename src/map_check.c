@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/24 20:06:54 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/28 16:20:28 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/01 20:35:25 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,20 +82,20 @@ void	check_map(t_so_long *game)
 	char	**map_copy;
 
 	if (!check_between_line(game->map))
-		error_exit("Invalid map\n", NULL);
+		error_exit("Invalid map\n", NULL, game);
 	if (!check_n_chars(game->map))
-		error_exit("Invalid map\n", NULL);
+		error_exit("Invalid map\n", NULL, game);
 	game->chest->n_chest = game->map->c_amount;
 	if (!check_walls(game->map))
-		error_exit("Invalid map\n", NULL);
+		error_exit("Invalid map\n", NULL, game);
 	map_copy = ft_copy_array(game->map->map_array);
 	if (!map_copy)
-		error_exit(NULL, "ft_copy_array");
+		error_exit(NULL, "ft_copy_array", game);
 	flood_fill_map(map_copy, game->map->player_j, game->map->player_i);
 	if (!check_flood_map(map_copy))
 	{
 		ft_free_array(map_copy);
-		error_exit("Invalid map\n", NULL);
+		error_exit("Invalid map\n", NULL, game);
 	}
 	ft_free_array(map_copy);
 }

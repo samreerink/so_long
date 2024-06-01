@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                       ::::::::             */
-/*   main.c                                            :+:    :+:             */
+/*   free_animation.c                                  :+:    :+:             */
 /*                                                    +:+                     */
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
-/*   Created: 2024/04/21 20:39:35 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/06/01 22:12:55 by sreerink      ########   odam.nl         */
+/*   Created: 2024/06/01 21:54:10 by sreerink      #+#    #+#                 */
+/*   Updated: 2024/06/01 21:59:24 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-int	main(int argc, char *argv[])
+void	free_anim(t_animation *a)
 {
-	t_so_long	*game;
+	t_frame	*current;
+	t_frame	*temp;
 
-	if (argc != 2)
-		error_exit("Invalid amount of arguments\n", NULL, NULL);
-	game = init_game(argv[1]);
-	draw_background(game);
-	load_fg_animations(game);
-	mlx_loop_hook(game->mlx, update, game);
-	mlx_key_hook(game->mlx, key_update, game);
-	mlx_close_hook(game->mlx, exit_game, game);
-	mlx_loop(game->mlx);
-	mlx_terminate(game->mlx);
-	return (EXIT_SUCCESS);
+	if (!a)
+		return ;
+	current = a->frame;
+	while (current)
+	{
+		temp = current->next;
+		free(current);
+		current = temp;
+	}
+	free(a);
 }

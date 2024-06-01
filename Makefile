@@ -6,7 +6,7 @@
 #    By: sreerink <sreerink@student.codam.nl>        +#+                       #
 #                                                   +#+                        #
 #    Created: 2024/02/10 21:57:52 by sreerink      #+#    #+#                  #
-#    Updated: 2024/06/01 00:48:01 by sreerink      ########   odam.nl          #
+#    Updated: 2024/06/01 22:14:47 by sreerink      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME= 		so_long
 
 RM= 		rm -rf
 
-FLAGS= 		-Wall -Werror -Wextra
+FLAGS= 		-Wall -Werror -Wextra -g
 
 SRC_DIR=	src
 
@@ -24,7 +24,7 @@ SRCS=		$(addprefix $(SRC_DIR)/, main.c init_game.c animation.c \
 		map_check.c update_game.c image_utils.c exit_game.c \
 		draw_background.c draw_background_utils.c init_map.c \
 		flood_fill.c ft_put_pixel.c load_fg_anim.c key_hook.c \
-		key_hook_utils.c)	
+		key_hook_utils.c free_animation.c)	
 
 OBJ=		$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 

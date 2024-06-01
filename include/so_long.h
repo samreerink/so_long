@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/04/21 20:52:34 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/06/01 00:47:06 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/01 19:52:27 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 
 typedef struct s_map {
+	int	file;
 	char	**map_array;
 	size_t	c_amount;
 	size_t	p_amount;
@@ -92,7 +93,7 @@ typedef struct s_so_long {
 
 // Functions
 
-void		error_exit(char *msg, char *p_msg);
+void		error_exit(char *msg, char *p_msg, t_so_long *game);
 
 void		exit_game(void *ptr);
 

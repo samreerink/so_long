@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 19:56:21 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/05/27 22:29:55 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/01 21:59:51 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,12 @@ t_sprite	*load_sprite_sheet(const char *file, int h, int w, mlx_t *mlx);
 
 void		sprite_to_frame(mlx_image_t *img, t_sprite *s);
 
-void		add_frame(t_animation *a, t_sprite *s);
+bool		add_frame(t_animation *a, t_sprite *s);
 
 void		update_animation(t_animation *a, double dt);
 
 t_animation	*init_animation(t_sprite *s, int n_frames, int row, int f_speed);
+
+void		free_anim(t_animation *a);
 
 #endif
