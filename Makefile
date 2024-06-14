@@ -6,7 +6,7 @@
 #    By: sreerink <sreerink@student.codam.nl>        +#+                       #
 #                                                   +#+                        #
 #    Created: 2024/02/10 21:57:52 by sreerink      #+#    #+#                  #
-#    Updated: 2024/06/14 23:01:21 by sreerink      ########   odam.nl          #
+#    Updated: 2024/06/14 23:10:28 by sreerink      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,11 +45,11 @@ all:	$(NAME)
 
 $(MLX):
 	git clone $(MLX_REPO) $(MLX)
-	cd $(MLX) && git checkout $(MLX_COMMIT)
+	cd $(MLX) && git config advice.detachedHead false && git checkout $(MLX_COMMIT)
 
 $(LIBFT):
 	git clone $(LIBFT_REPO) $(LIBFT)
-	cd $(LIBFT) && git checkout $(LIBFT_COMMIT)
+	cd $(LIBFT) && git config advice.detachedHead false && git checkout $(LIBFT_COMMIT)
 
 $(MLX_LIB): | $(MLX)
 	@if [ ! -f $(MLX_LIB) ]; then \
