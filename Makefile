@@ -6,7 +6,7 @@
 #    By: sreerink <sreerink@student.codam.nl>        +#+                       #
 #                                                   +#+                        #
 #    Created: 2024/02/10 21:57:52 by sreerink      #+#    #+#                  #
-#    Updated: 2024/06/14 23:10:28 by sreerink      ########   odam.nl          #
+#    Updated: 2024/06/14 23:22:31 by sreerink      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,53 +29,43 @@ SRCS=		$(addprefix $(SRC_DIR)/, main.c init_game.c animation.c \
 OBJ=		$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 MLX=		./MLX42
-MLX_REPO=	https://github.com/codam-coding-college/MLX42.git
-MLX_COMMIT=	ca0f163812427a6ef8a20c747420a95e674abb87
+
 MLX_LIB=	$(MLX)/build/libmlx42.a
+
 MLX_FLAGS=	$(MLX_LIB) -ldl -lglfw -pthread -lm
 
-LIBFT=		./Libft
-LIBFT_REPO=	https://github.com/samreerink/Libft.git
-LIBFT_COMMIT= 81f70608867812b69bddaa97d992d6be5b567c15
-LIBFT_LIB=	$(LIBFT)/libft.a
+LIBFT=		./Libft/libft.a
 
-HEADERS=	-I $(LIBFT) -I $(MLX)/include
+HEADERS=	-I ./Libft -I $(MLX)/include
+
 
 all:	$(NAME)
 
-$(MLX):
-	git clone $(MLX_REPO) $(MLX)
-	cd $(MLX) && git config advice.detachedHead false && git checkout $(MLX_COMMIT)
-
-$(LIBFT):
-	git clone $(LIBFT_REPO) $(LIBFT)
-	cd $(LIBFT) && git config advice.detachedHead false && git checkout $(LIBFT_COMMIT)
-
-$(MLX_LIB): | $(MLX)
+$(MLX_LIB):
 	@if [ ! -f $(MLX_LIB) ]; then \
 		cmake $(MLX) -B $(MLX)/build && make -C $(MLX)/build -j4; \
 	fi
-
-$(LIBFT_LIB): | $(LIBFT)
-	$(MAKE) -C $(LIBFT)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) $(FLAGS) $(HEADERS) -c $< -o $@
 
-$(NAME): $(LIBFT_LIB) $(MLX_LIB) $(OBJ)
-	$(CC) $(OBJ) $(MLX_FLAGS) -L$(LIBFT) -lft -o $(NAME)
+$(LIBFT):
+	$(MAKE) -C ./Libft
+
+$(NAME): 	$(LIBFT) $(MLX_LIB) $(OBJ)
+	$(CC) $(OBJ) $(MLX_FLAGS) -L./Libft -lft -o $(NAME)
 
 clean:
 	$(RM) $(OBJ)
 	$(RM) $(OBJ_DIR)
-	$(MAKE) -C $(LIBFT) clean
 	$(RM) $(MLX)/build
+	$(MAKE) -C ./Libft clean
 
-fclean: clean
+fclean:	clean
 	$(RM) $(NAME)
-	$(MAKE) -C $(LIBFT) fclean
+	$(MAKE) -C ./Libft fclean
 
-re: fclean all
+re:		fclean all
 
-.PHONY: all clean fclean re
+.PHONY:	all clean fclean re
