@@ -6,7 +6,7 @@
 #    By: sreerink <sreerink@student.codam.nl>        +#+                       #
 #                                                   +#+                        #
 #    Created: 2024/02/10 21:57:52 by sreerink      #+#    #+#                  #
-#    Updated: 2024/06/14 22:33:07 by sreerink      ########   odam.nl          #
+#    Updated: 2024/06/14 23:01:21 by sreerink      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,13 +30,13 @@ OBJ=		$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 MLX=		./MLX42
 MLX_REPO=	https://github.com/codam-coding-college/MLX42.git
-MLX_BRANCH=	ca0f163
+MLX_COMMIT=	ca0f163812427a6ef8a20c747420a95e674abb87
 MLX_LIB=	$(MLX)/build/libmlx42.a
 MLX_FLAGS=	$(MLX_LIB) -ldl -lglfw -pthread -lm
 
 LIBFT=		./Libft
 LIBFT_REPO=	https://github.com/samreerink/Libft.git
-LIBFT_BRANCH= 81f7060
+LIBFT_COMMIT= 81f70608867812b69bddaa97d992d6be5b567c15
 LIBFT_LIB=	$(LIBFT)/libft.a
 
 HEADERS=	-I $(LIBFT) -I $(MLX)/include
@@ -44,10 +44,12 @@ HEADERS=	-I $(LIBFT) -I $(MLX)/include
 all:	$(NAME)
 
 $(MLX):
-	git clone -b $(MLX_BRANCH) $(MLX_REPO) $(MLX)
+	git clone $(MLX_REPO) $(MLX)
+	cd $(MLX) && git checkout $(MLX_COMMIT)
 
 $(LIBFT):
-	git clone -b $(LIBFT_BRANCH) $(LIBFT_REPO) $(LIBFT)
+	git clone $(LIBFT_REPO) $(LIBFT)
+	cd $(LIBFT) && git checkout $(LIBFT_COMMIT)
 
 $(MLX_LIB): | $(MLX)
 	@if [ ! -f $(MLX_LIB) ]; then \
