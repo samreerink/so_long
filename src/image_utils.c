@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/08 20:48:39 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/06/01 20:42:29 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/14 21:58:10 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ mlx_image_t	*load_png_to_image(char *path_png, t_so_long *game)
 		error_exit(NULL, NULL, game);
 	img = mlx_texture_to_image(game->mlx, texture);
 	mlx_delete_texture(texture);
+	if (!img)
+		error_exit(NULL, NULL, game);
 	return (img);
 }
 

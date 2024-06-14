@@ -6,7 +6,7 @@
 #    By: sreerink <sreerink@student.codam.nl>        +#+                       #
 #                                                   +#+                        #
 #    Created: 2024/02/10 21:57:52 by sreerink      #+#    #+#                  #
-#    Updated: 2024/06/01 22:14:47 by sreerink      ########   odam.nl          #
+#    Updated: 2024/06/14 22:12:22 by sreerink      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME= 		so_long
 
 RM= 		rm -rf
 
-FLAGS= 		-Wall -Werror -Wextra -g
+FLAGS= 		-Wall -Werror -Wextra
 
 SRC_DIR=	src
 
@@ -30,17 +30,21 @@ OBJ=		$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 MLX=		./MLX42
 
-LIBS_MLX=	$(MLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+MLX_LIB=	$(MLX)/build/libmlx42.a
+
+MLX_FLAGS=	$(MLX_LIB) -ldl -lglfw -pthread -lm
 
 LIBFT=		./Libft/libft.a
 
 HEADERS=	-I ./Libft -I $(MLX)/include
 
 
-all:	mlx $(NAME)
+all:	$(NAME)
 
-mlx:
-	@cmake $(MLX) -B $(MLX)/build && make -C $(MLX)/build -j4
+$(MLX_LIB):
+	@if [ ! -f $(MLX_LIB) ]; then \
+		cmake $(MLX) -B $(MLX)/build && make -C $(MLX)/build -j4; \
+	fi
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
@@ -49,8 +53,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 $(LIBFT):
 	$(MAKE) -C ./Libft
 
-$(NAME): 	$(LIBFT) $(OBJ)
-	$(CC) $(OBJ) $(LIBS_MLX) -L./Libft -lft -o $(NAME)
+$(NAME): 	$(LIBFT) $(MLX_LIB) $(OBJ)
+	$(CC) $(OBJ) $(MLX_FLAGS) -L./Libft -lft -o $(NAME)
 
 clean:
 	$(RM) $(OBJ)

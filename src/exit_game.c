@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/22 05:01:33 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/06/09 20:24:36 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/14 21:48:41 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	free_game(t_so_long *game)
 {
-	printf("Inside free_game() function\n");
 	if (!game)
 		return ;
 	if (game->mlx)
@@ -60,7 +59,6 @@ void	exit_game(void *ptr)
 	t_so_long	*game;
 
 	game = (t_so_long *)ptr;
-	printf("Inside exit_game() function\n");
 	free_game(game);
 	exit(EXIT_SUCCESS);
 }

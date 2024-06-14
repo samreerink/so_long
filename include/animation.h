@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 19:56:21 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/06/01 21:59:51 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/14 21:37:13 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,30 @@
 # include "../MLX42/include/MLX42/MLX42.h"
 # include "../Libft/libft.h"
 
-typedef struct s_sprite_sheet {
+typedef struct s_sprite_sheet
+{
 	mlx_image_t	*img;
 	mlx_t		*mlx;
 	uint32_t	slice_height;
 	uint32_t	slice_width;
 	uint32_t	cur_y;
 	uint32_t	cur_x;
-} t_sprite;
+}	t_sprite;
 
-typedef struct s_frame {
-	mlx_image_t	*img;
+typedef struct s_frame
+{
+	mlx_image_t		*img;
 	struct s_frame	*next;
-} t_frame;
+}	t_frame;
 
-typedef struct s_animation {
+typedef struct s_animation
+{
 	struct s_frame	*frame;
-	int		frame_speed;
-	double		accum;
-	int		current_frame;
-	int		n_frames;
-} t_animation;
-
+	int				frame_speed;
+	double			accum;
+	int				current_frame;
+	int				n_frames;
+}	t_animation;
 
 // Functions
 

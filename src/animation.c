@@ -6,7 +6,7 @@
 /*   By: sreerink <sreerink@student.codam.nl>        +#+                      */
 /*                                                  +#+                       */
 /*   Created: 2024/05/07 21:09:47 by sreerink      #+#    #+#                 */
-/*   Updated: 2024/06/01 21:13:15 by sreerink      ########   odam.nl         */
+/*   Updated: 2024/06/14 21:53:25 by sreerink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,10 @@ bool	add_frame(t_animation *a, t_sprite *s)
 		return (false);
 	new_frame->img = mlx_new_image(s->mlx, s->slice_width, s->slice_height);
 	if (!new_frame->img)
+	{
+		free(new_frame);
 		return (false);
+	}
 	sprite_to_frame(new_frame->img, s);
 	new_frame->next = NULL;
 	if (!a->frame)
